@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pediatric Chest Pneumonia Classification</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <style>
+      * {
+        font-family: 'Inter', sans-serif;
+      }
+      body {
+        background: #ffffff;
+        min-height: 100vh;
+      }
+      .main-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        padding: 3rem;
+        margin: 2rem auto;
+        max-width: 700px;
+      }
+      .project-title {
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+      }
+      .project-subtitle {
+        color: #718096;
+        margin-bottom: 2rem;
+      }
+      .upload-area {
+        border: 2px dashed #cbd5e0;
+        border-radius: 12px;
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        background-color: #f7fafc;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      .upload-area:hover {
+        border-color: #667eea;
+        background-color: #ebf4ff;
+      }
+      .upload-area.drag-over {
+        border-color: #48bb78;
+        background-color: #f0fff4;
+      }
+      .upload-icon {
+        font-size: 2.5rem;
+        color: #a0aec0;
+        margin-bottom: 1rem;
+      }
+      .upload-area:hover .upload-icon {
+        color: #667eea;
+      }
+      .preview-img {
+        max-width: 280px;
+        max-height: 280px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        margin-top: 1rem;
+      }
+      .classify-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        padding: 0.75rem 2.5rem;
+        border-radius: 8px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .classify-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      }
+      .classify-btn:disabled {
+        opacity: 0.5;
+        transform: none;
+        box-shadow: none;
+      }
+      .tech-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-top: 1.5rem;
+      }
+      .tech-tag {
+        background: #edf2f7;
+        color: #4a5568;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+
+  <body>
+    <section class="section">
+      <div class="main-card">
+        <div class="has-text-centered">
+          <h1 class="title is-3 project-title">
+            🫁 Pediatric Chest Pneumonia Classification
+          </h1>
+          <p class="project-subtitle">
+            Upload a chest X-ray image to classify it as
+            <strong>Normal</strong> or <strong>Pneumonia</strong> using a CNN model.
+          </p>
+        </div>
+
+        <!-- Upload Form -->
+        <form action="/predict" method="POST" enctype="multipart/form-data" id="upload-form">
+          <div class="upload-area" id="drop-zone">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <p class="is-size-5">
+              <strong>Drag & drop</strong> an X-ray image here, or <strong>click to browse</strong>
+            </p>
+            <p class="is-size-7 has-text-grey" style="margin-top: 0.5rem;">
+              Supports PNG, JPG, JPEG
+            </p>
+            <input type="file" name="image" id="image-input" accept="image/*" required
+              style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;" />
+          </div>
+
+          <!-- Image Preview -->
+          <div id="preview-container" style="display: none; text-align: center; margin-top: 1.5rem;">
+            <img id="image-preview" src="" alt="Preview" class="preview-img" />
+            <p id="file-name" class="is-size-6 has-text-grey" style="margin-top: 0.5rem;"></p>
+          </div>
+
+          <div class="has-text-centered" style="margin-top: 1.5rem;">
+            <button type="submit" class="button is-medium is-primary classify-btn" id="predict-btn" disabled>
+              <span class="icon"><i class="fas fa-stethoscope"></i></span>
+              <span>Classify X-Ray</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Tech tags -->
+        <div class="tech-tags">
+          <span class="tech-tag">TensorFlow</span>
+          <span class="tech-tag">CNN</span>
+          <span class="tech-tag">Flask</span>
+          <span class="tech-tag">OpenCV</span>
+          <span class="tech-tag">Python</span>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const input = document.getElementById('image-input');
+      const preview = document.getElementById('image-preview');
+      const previewContainer = document.getElementById('preview-container');
+      const fileName = document.getElementById('file-name');
+      const predictBtn = document.getElementById('predict-btn');
+      const dropZone = document.getElementById('drop-zone');
+
+      input.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            previewContainer.style.display = 'block';
+            predictBtn.disabled = false;
+          };
+          reader.readAsDataURL(this.files[0]);
+          fileName.textContent = this.files[0].name;
+        }
+      });
+
+      dropZone.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        this.classList.add('drag-over');
+      });
+      dropZone.addEventListener('dragleave', function (e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+      });
+      dropZone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+        if (e.dataTransfer.files.length) {
+          input.files = e.dataTransfer.files;
+          input.dispatchEvent(new Event('change'));
+        }
+      });
+    </script>
+  </body>
+</html>
