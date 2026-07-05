@@ -170,7 +170,7 @@ We conducted four comprehensive experiments:
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.10
 - pip package manager
 
 ### Setup
@@ -322,18 +322,6 @@ Contributions are welcome! To contribute:
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## Citation
-
-If you use this work in your research, please cite:
-
-```bibtex
-@article{manaf2024pediatric,
-  title   = {Pediatric Chest Pneumonia Classification: Leveraging Traditional CNN with GAN for Data Balancing},
-  author  = {Abdul Manaf and Nimra Mughal},
-  journal = {arXiv preprint arXiv:2024.xxxxx},
-  year    = {2024}
-}
 ```
 
 ## Acknowledgments
