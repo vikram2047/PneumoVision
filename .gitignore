@@ -4,7 +4,6 @@ architecure.h5
 generator-(Normal)-148x148.h5
 *.pyc
 *.pkl
-.vscode/
 
 # Dataset
 Radiography/

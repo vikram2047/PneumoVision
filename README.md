@@ -177,8 +177,8 @@ We conducted four comprehensive experiments:
 
 ```bash
 # Clone the repository
-git clone https://github.com/AbdulManaf12/Pediatric-Chest-Pneumonia-Classification-System.git
-cd Pediatric-Chest-Pneumonia-Classification-System
+git clone https://github.com/vikram2047/PneumoVision.git
+cd PneumoVision
 
 # Create a virtual environment (recommended)
 python -m venv venv
