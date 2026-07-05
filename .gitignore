@@ -1,0 +1,15 @@
+.hf_config
+weights.h5
+architecure.h5
+generator-(Normal)-148x148.h5
+*.pyc
+*.pkl
+
+# Dataset
+Radiography/
+
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
